@@ -24,6 +24,7 @@ import image5 from '@/images/photos/image-5.jpg'
 import { formatDate } from '@/lib/formatDate'
 import { generateRssFeed } from '@/lib/generateRssFeed'
 import { getAllArticles } from '@/lib/getAllArticles'
+import { useState } from 'react'
 
 function MailIcon(props) {
   return (
@@ -108,9 +109,42 @@ function SocialLink({ icon: Icon, ...props }) {
 }
 
 function Newsletter() {
+  const [email, setEmail] = useState('')
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    try {
+      const response = await fetch('/api/emailCapture', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      console.log(response)
+
+      if (!response.ok) {
+        throw new Error(`Failed to capture email: ${response.statusText}`)
+      }
+
+      // Success!
+      setEmail('')
+      alert('Thanks for subscribing!')
+    } catch (error) {
+      console.error(error)
+      alert('Failed to subscribe. Please try again later.')
+    }
+  }
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value)
+  }
+
   return (
     <form
-      action="/thank-you"
+      onSubmit={handleSubmit}
       className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40"
     >
       <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -126,6 +160,8 @@ function Newsletter() {
           placeholder="Email address"
           aria-label="Email address"
           required
+          value={email}
+          onChange={handleEmailChange}
           className="min-w-0 flex-auto appearance-none rounded-md border border-zinc-900/10 bg-white px-3 py-[calc(theme(spacing.2)-1px)] shadow-md shadow-zinc-800/5 placeholder:text-zinc-400 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 dark:border-zinc-700 dark:bg-zinc-700/[0.15] dark:text-zinc-200 dark:placeholder:text-zinc-500 dark:focus:border-teal-400 dark:focus:ring-teal-400/10 sm:text-sm"
         />
         <Button type="submit" className="ml-4 flex-none">
@@ -255,7 +291,7 @@ export default function Home({ articles }) {
         </title>
         <meta
           name="description"
-          content="I’m Spencer, a software designer and entrepreneur based in New York City. I’m the founder and CEO of Planetaria, where we develop technologies that empower regular people to explore space on their own terms."
+          content="I’m Creeland, a software designer and entrepreneur based in New York City. I’m the founder and CEO of Planetaria, where we develop technologies that empower regular people to explore space on their own terms."
         />
       </Head>
       <Container className="mt-9">
@@ -295,11 +331,11 @@ export default function Home({ articles }) {
       {/* <Photos /> */}
       <Container className="mt-24 md:mt-28">
         <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
-          {/* <div className="flex flex-col gap-16">
+          <div className="flex flex-col gap-16">
             {articles.map((article) => (
               <Article key={article.slug} article={article} />
             ))}
-          </div> */}
+          </div>
           <div className="space-y-10 lg:pl-16 xl:pl-24">
             <Newsletter />
             {/* <Resume /> */}

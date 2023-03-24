@@ -289,7 +289,7 @@ export default function Home({ articles }) {
         </title>
         <meta
           name="description"
-          content="I’m Creeland, a software designer and entrepreneur based in New York City. I’m the founder and CEO of Planetaria, where we develop technologies that empower regular people to explore space on their own terms."
+          content="I’m Creeland, a software developer and instructional designer based in Wichita Falls, Texas. I give people the tools to design high quality learning experiences."
         />
       </Head>
       <Container className="mt-9">

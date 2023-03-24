@@ -4,8 +4,6 @@ export default async function emailCapture(req, res) {
   const formId = process.env.CONVERTKIT_FORM_ID
   const apiKey = process.env.CONVERTKIT_API_KEY_PUBLIC
 
-  console.log(email)
-
   const url = `https://api.convertkit.com/v3/forms/${formId}/subscribe`
   const options = {
     method: 'POST',
@@ -15,12 +13,8 @@ export default async function emailCapture(req, res) {
     body: JSON.stringify({ api_key: apiKey, email }),
   }
 
-  console.log('TESTTESTS')
-
   try {
     const response = await fetch(url, options)
-
-    console.log(response)
 
     if (!response.ok) {
       throw new Error(`Failed to subscribe ${email}: ${response.statusText}`)

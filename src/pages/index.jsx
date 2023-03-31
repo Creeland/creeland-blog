@@ -108,7 +108,7 @@ function SocialLink({ icon: Icon, ...props }) {
   )
 }
 
-function Newsletter() {
+export function Newsletter() {
   const [email, setEmail] = useState('')
 
   const handleSubmit = async (event) => {

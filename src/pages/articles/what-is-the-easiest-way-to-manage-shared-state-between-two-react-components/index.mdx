@@ -1,0 +1,94 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+import Image from 'next/image'
+import mushroomImage from './mushroom.jpg'
+
+export const meta = {
+  author: 'Creeland Provinsal',
+  date: '2023-03-30',
+  title:
+    'What is the easiest way to manage shared state between two React components?',
+  description:
+    'Should you just use the Context API? Maybe lifting your state up to a common ancestor? Or maybe you should use something like Zustand?',
+}
+
+export default (props) => <ArticleLayout meta={meta} {...props} />
+
+<Image src={mushroomImage} alt="mushroom on a log" />
+
+Should I just use the Context API? Maybe lift my state up to a common ancestor? Or maybe I could use something like Zustand?
+
+"I just want to use a hook to manage state between components. I know I can use Zustand for this but isn't that overkill?"
+
+I heard this question recently, and the answer is no, it's not overkill at all.
+
+Zustand is a great way to share state between components. It's easy to use, and it's easy to understand.
+
+This is a store in Zustand:
+
+```jsx
+import create from 'zustand'
+import { SetState } from 'zustand'
+
+type FrogStore = {
+  isRaining: boolean,
+  toggleRain: () => void,
+}
+
+const useFrogStore = create((set: SetState<FrogStore>) => ({
+  isRaining: false,
+  toggleRain: () => set((state) => ({ isRaining: !state.isRaining })),
+}))
+```
+
+Pretty straightforward.
+
+You use the `create` function to create a store. The store is just a function that takes a `set` argument.
+
+The `set` argument is a function that takes a callback. The callback is passed the current state and returns the new state.
+
+You can use this store in any component you want.
+
+Let's say you have a frog and a mushroom. The frog likes to hide under the mushroom when it rains.
+
+Here's how you can easily share state between two components using your Zustand store 🐸🍄:
+
+```jsx
+const Frog = () => {
+  const isRaining = useFrogStore((state) => state.isRaining)
+  const toggleRain = useFrogStore((state) => state.toggleRain)
+  const frogStatus = isRaining
+    ? 'hiding under the mushroom'
+    : 'coming out to play'
+
+  return (
+    <>
+      <h1>The frog is {frogStatus}.</h1>
+      <button onClick={toggleRain}>
+        {isRaining ? 'Stop rain' : 'Start rain'}
+      </button>
+    </>
+  )
+}
+
+const Mushroom = () => {
+  const isRaining = useFrogStore((state) => state.isRaining)
+  return <h1>{isRaining ? 'The mushroom is wet.' : 'The mushroom is dry.'}</h1>
+}
+
+const App = () => (
+  <>
+    <Frog />
+    <Mushroom />
+  </>
+)
+```
+
+No need to wrap the components in a provider, or pass state props around.
+
+Wins across the board!
+
+Zustand is also one of the smallest state management libraries with a bundle size of just 1.16kb. **It's in no way overkill.**
+
+If you want to gain a deeper understanding of how a library like Zustand works, I recommend you check out this course by Daishi Kato, [where you build your own Zustand-like state library](https://egghead.io/courses/create-a-zustand-like-module-state-library-bf55241e)
+
+And if you want to learn more about Zustand, sign up for my newsletter below. I will be writing about some more advanced use-cases for Zustand in the future!
